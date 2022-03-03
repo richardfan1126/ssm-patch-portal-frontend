@@ -1,0 +1,70 @@
+<nav aria-label="breadcrumb" class="rounded-3 bg-light p-2 my-3">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item"><a routerLink="">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Patch detail</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <h3>Missing Patches of {{ instanceName }} ({{ instanceId }})</h3>
+</div>
+
+<div class="row" *ngIf="!getPatchListLoading && patchInProgress">
+    <p>Instance is now patching...</p>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th scope="col">
+                <input *ngIf="!patchInProgress" class="form-check-input" type="checkbox" (change)="toggleAll()" [checked]="isAllPatchSelected">
+            </th>
+            <th scope="col">Title</th>
+            <th scope="col">KBId</th>
+            <th scope="col">Classification</th>
+            <th scope="col">Severity</th>
+            <th scope="col">State</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let patch of patchList; index as i">
+            <th scope="row">
+                <input *ngIf="!patchInProgress" class="form-check-input" type="checkbox" [(ngModel)]="patch.selected" (change)="checkIfAllPatchSelected()">
+            </th>
+            <td>{{ patch.Title }}</td>
+            <td>{{ patch.KBId }}</td>
+            <td>{{ patch.Classification }}</td>
+            <td>{{ patch.Severity }}</td>
+            <td>{{ patch.State }}</td>
+        </tr>
+
+        <tr *ngIf="getPatchListLoading">
+            <td [attr.colspan]="colCount">Loading...</td>
+        </tr>
+
+        <tr *ngIf="patchList.length == 0 && !getPatchListLoading">
+            <td [attr.colspan]="colCount">No missing patch</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="d-flex py-2">
+    <div class="align-self-start flex-fill">
+        <button type="button" class="btn btn-primary mx-1" (click)="confirmInstall()" [disabled]="patchInProgress || selectedPatchCount == 0">
+            {{ !getPatchListLoading && patchInProgress ? "Instance is now patching" : "Install selected patches" }}
+        </button>
+    </div>
+</div>
+
+<!-- Install Confirm Dialog -->
+<ng-template #confirmDialog let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirm install the following patch?</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body" [innerHTML]="selectedPatchNames"></div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" (click)="modal.close('No')">No</button>
+        <button type="button" class="btn btn-outline-success" (click)="modal.close('Yes')">Yes</button>
+    </div>
+</ng-template>

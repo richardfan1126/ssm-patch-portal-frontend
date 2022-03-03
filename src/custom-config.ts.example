@@ -1,0 +1,7 @@
+export const customConfig = {
+  "ApiEndpoint": "",
+  "IdentityPoolId": "",
+  "UserPoolId": "",
+  "UserPoolWebClientId": "",
+  "Region": "us-east-1"
+};

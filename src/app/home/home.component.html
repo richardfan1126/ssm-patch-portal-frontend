@@ -1,0 +1,73 @@
+<nav aria-label="breadcrumb" class="rounded-3 bg-light p-2 my-3">
+    <ol class="breadcrumb m-0">
+        <li class="breadcrumb-item active" aria-current="page">Home</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <h3>SSM-managed Instance</h3>
+</div>
+
+<div class="d-flex">
+    <div class="align-self-start flex-fill">
+        <button type="button" class="btn btn-primary align-self-start flex-fill mx-1" (click)="refreshAll()" [disabled]="refreshInstanceListLoading">
+            Refresh
+        </button>
+        <button type="button" class="btn btn-primary align-self-start flex-fill mx-1" (click)="startScan()" [disabled]="startScanLoading || (scanAssociationExist && isScanProcessing)">
+            Scan for missing patch
+        </button>
+
+        <span *ngIf="scanAssociationExist && isScanProcessing && !refreshScanStatusLoading">
+            Scan in Progress...
+        </span>
+
+        <span *ngIf="scanAssociationExist &&!isScanProcessing && scanStatus['lastExecutionDate']">
+            Last scan at: {{ scanStatus['lastExecutionDate'] }}
+        </span>
+    </div>
+
+    <div class="align-self-end">
+        <button type="button" class="btn btn-danger align-self-end mx-1" (click)="signOut()">
+            Logout
+        </button>
+    </div>
+</div>
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Instance ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">OS</th>
+            <th scope="col">Patch State</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let instance of instances; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>
+                <a *ngIf="instance.patchState" [routerLink]="['/detail', instance.instanceId]">{{ instance.instanceId }}</a>
+                <span *ngIf="!instance.patchState">{{ instance.instanceId }}</span>
+            </td>
+            <td>{{ instance.name }}</td>
+            <td>{{ instance.platformName }}</td>
+            <td *ngIf="instance.patchState">
+                Installed: {{ instance.patchState.InstalledCount }}<br/>
+                <span [ngClass]="{'text-danger fw-bold': instance.patchState.MissingCount > 0}">Missing: {{ instance.patchState.MissingCount }}</span><br/>
+                Pending Reboot: {{ instance.patchState.InstalledPendingRebootCount }}
+            </td>
+            <td *ngIf="!instance.patchState">
+                No information
+            </td>
+        </tr>
+
+        <tr *ngIf="refreshInstanceListLoading">
+            <td [attr.colspan]="colCount">Loading...</td>
+        </tr>
+
+        <tr *ngIf="instances.length == 0 && !refreshInstanceListLoading">
+            <td [attr.colspan]="colCount">No active instance</td>
+        </tr>
+    </tbody>
+</table>
