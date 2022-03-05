@@ -55,7 +55,8 @@
             <td *ngIf="instance.patchState">
                 Installed: {{ instance.patchState.InstalledCount }}<br/>
                 <span [ngClass]="{'text-danger fw-bold': instance.patchState.MissingCount > 0}">Missing: {{ instance.patchState.MissingCount }}</span><br/>
-                Pending Reboot: {{ instance.patchState.InstalledPendingRebootCount }}
+                Pending Reboot: {{ instance.patchState.InstalledPendingRebootCount }}<br/>
+                Last Updated: {{ instance.patchState.OperationEndTime }}
             </td>
             <td *ngIf="!instance.patchState">
                 No information

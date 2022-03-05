@@ -11,6 +11,7 @@ import { API } from 'aws-amplify';
 export class DetailComponent implements OnInit {
   instanceId: string|null = "";
   instanceName = "";
+  lastUpdateTime: string|null = null;
   getPatchListLoading = false;
   patchList: any[] = [];
   selectedPatch: any[] = [];
@@ -69,6 +70,12 @@ export class DetailComponent implements OnInit {
       this.patchList = response.missingPatches;
       this.instanceName = response.instanceName;
       this.patchInProgress = response.isPatching;
+
+      if(response.patchState && response.patchState.OperationEndTime) {
+        this.lastUpdateTime = response.patchState.OperationEndTime;
+      } else {
+        this.lastUpdateTime = null;
+      }
 
       // Setup loop to refresh the patch progress
       if(this.patchInProgress){

@@ -9,6 +9,10 @@
     <h3>Missing Patches of {{ instanceName }} ({{ instanceId }})</h3>
 </div>
 
+<div class="row" *ngIf="!patchInProgress">
+    <h5>Last updated: {{ lastUpdateTime ? lastUpdateTime : 'N/A' }}</h5>
+</div>
+
 <div class="row" *ngIf="!getPatchListLoading && patchInProgress">
     <p>Instance is now patching...</p>
 </div>
