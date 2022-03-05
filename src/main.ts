@@ -12,7 +12,7 @@ Amplify.configure({
     identityPoolId: customConfig.IdentityPoolId,
     userPoolId: customConfig.UserPoolId,
     userPoolWebClientId: customConfig.UserPoolWebClientId,
-    region: "us-east-1"
+    region: customConfig.Region
   },
   API: {
     endpoints: [
